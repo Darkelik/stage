@@ -44,7 +44,7 @@ public class EmployeeController {
 	}
 
 	private static List<Employee> createList() {
-		List<Employee> tempEmployees = new ArrayList<>();
+		List<Employee> tempEmployees = new ArrayList<Employee>();
 		Employee emp1 = new Employee();
 		emp1.setName("emp1");
 		emp1.setDesignation("manager");
