@@ -24,7 +24,7 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping(path = { "/{id}" })
-	public Employee delete(@PathVariable("id") int id) {
+	public Employee delete(@PathVariable("id") String id) {
 		Employee deletedEmp = null;
 		for (Employee emp : employees) {
 			if (emp.getEmpId().equals(id)) {
