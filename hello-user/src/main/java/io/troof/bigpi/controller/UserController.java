@@ -40,15 +40,6 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping(value = "/users",method = RequestMethod.GET,produces = "application/json")
-	public String firstPage(){
-		String hellos = "";
-		for(User user : users) {
-			hellos += "Troof : say hello " + user.getUsername() + " (id = " + user.getId() + ")\n";
-		}
-		return hellos;
-	}*/
-	
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<?> getUsers(@RequestParam(required = false) String id) {
 	    if (id != null) {
@@ -66,7 +57,16 @@ public class UserController {
 	        return ResponseEntity.ok(users);
 	    }
 	}
-
+	*/
+	
+	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
+	public ResponseEntity<?> getUsers(@RequestParam(required = false) String username) {
+	    if (username != null) {
+	        return ResponseEntity.ok("Troof : say hello " + username);
+	    } else {
+	        return ResponseEntity.ok(users);
+	    }
+	}
 	
 	@DeleteMapping(path = {"/{id}"})
 	public User delete(@PathVariable("id") String id) {
