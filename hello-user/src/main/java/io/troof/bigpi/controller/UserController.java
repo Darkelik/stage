@@ -33,17 +33,10 @@ public class UserController {
 		return tempUsers;
 	}
 	
-	/*
-	@RequestMapping(value = "/users",method = RequestMethod.GET,produces = "application/json")
-	public List<User> firstPage(){
-		return users;
-	}
-	
-	
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<?> getUsers(@RequestParam(required = false) String id) {
 	    if (id != null) {
-	        // Chercher l'utilisateur correspondant
+	    	//dire bonjour à un user qui correspond à l'id
 	        Optional<User> user = users.stream().filter(u -> u.getId().equals(id)).findFirst();
 	        if (user.isPresent()) {
 	            String username = user.get().getUsername();
@@ -53,20 +46,11 @@ public class UserController {
 	            return ResponseEntity.notFound().build();
 	        }
 	    } else {
-	        // Retourner tous les utilisateurs
+	    	//retourner la liste des users
 	        return ResponseEntity.ok(users);
 	    }
 	}
-	*/
 	
-	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<?> getUsers(@RequestParam(required = false) String username) {
-	    if (username != null) {
-	        return ResponseEntity.ok("Troof : say hello " + username);
-	    } else {
-	        return ResponseEntity.ok(users);
-	    }
-	}
 	
 	@DeleteMapping(path = {"/{id}"})
 	public User delete(@PathVariable("id") String id) {
