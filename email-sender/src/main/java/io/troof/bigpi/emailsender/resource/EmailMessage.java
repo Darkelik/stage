@@ -1,62 +1,64 @@
 package io.troof.bigpi.emailsender.resource;
 
+/** Classe qui défini un Email. */
 public class EmailMessage {
-	
-	private String to;
-	private String cc;
-	private String bcc;
-	private String subject;
-	private String message;
-	
-	public EmailMessage() {
-		
-	}
-	
-	public EmailMessage(String to, String subject, String message) {
-		super();
-		this.to = to;
-		this.subject = subject;
-		this.message = message;
-	}
 
-	public String getTo() {
-		return to;
-	}
+  private String to;
+  private String cc;
+  private String bcc;
+  private String subject;
+  private String message;
 
-	public void setTo(String to) {
-		this.to = to;
-	}
+  public EmailMessage() {
+    
+  }
+  
+  /** Constructeur. */
+  public EmailMessage(String to, String cc, String bcc, String subject, String message) {
+    this.to = to;
+    this.cc = cc;
+    this.bcc = bcc;
+    this.subject = subject;
+    this.message = message;
+  }
 
-	public String getCc() {
-		return cc;
-	}
+  public String getTo() {
+    return to;
+  }
 
-	public void setCc(String cc) {
-		this.cc = cc;
-	}
+  public void setTo(String to) {
+    this.to = to;
+  }
 
-	public String getBcc() {
-		return bcc;
-	}
+  public String getCc() {
+    return cc;
+  }
 
-	public void setBcc(String bcc) {
-		this.bcc = bcc;
-	}
+  public void setCc(String cc) {
+    this.cc = cc;
+  }
 
-	public String getSubject() {
-		return subject;
-	}
+  public String getBcc() {
+    return bcc;
+  }
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+  public void setBcc(String bcc) {
+    this.bcc = bcc;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public String getSubject() {
+    return subject;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }
