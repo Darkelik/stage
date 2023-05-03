@@ -1,5 +1,5 @@
 package io.troof.bigpi.emailsender.service;
 
 public interface EmailSenderService {
-	void sendEmail(String to, String subject, String message);
+	public void sendEmail(String to, String cc, String bcc, String subject, String message);
 }
