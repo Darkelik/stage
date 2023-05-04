@@ -5,7 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-/** Envoi des emails. */
+/** Email sender. */
 @Service
 public class EmailSenderServiceImpl implements EmailSenderService {
   
@@ -16,9 +16,10 @@ public class EmailSenderServiceImpl implements EmailSenderService {
   }
 
   @Override
-  public void sendEmail(String to, String cc, String bcc, String subject, String message) {
+  public void sendEmail(String to, String cc, String bcc, String sub, String mes, String log) {
     
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    simpleMailMessage.setFrom(log);
     simpleMailMessage.setTo(to);
     if (cc != null && cc != "") {
       simpleMailMessage.setCc(cc);
@@ -26,8 +27,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     if (bcc != null && bcc != "") {
       simpleMailMessage.setBcc(bcc);
     }
-    simpleMailMessage.setSubject(subject);
-    simpleMailMessage.setText(message);
+    simpleMailMessage.setSubject(sub);
+    simpleMailMessage.setText(mes);
     
     this.mailSender.send(simpleMailMessage);
   }

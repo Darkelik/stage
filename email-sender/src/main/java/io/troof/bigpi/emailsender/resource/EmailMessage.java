@@ -1,6 +1,6 @@
 package io.troof.bigpi.emailsender.resource;
 
-/** Classe qui défini un Email. */
+/** Defining an email ('from' is required later). */
 public class EmailMessage {
 
   private String to;
@@ -13,7 +13,7 @@ public class EmailMessage {
     
   }
   
-  /** Constructeur. */
+  /** Constructor. */
   public EmailMessage(String to, String cc, String bcc, String subject, String message) {
     this.to = to;
     this.cc = cc;
