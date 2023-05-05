@@ -16,10 +16,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
   }
 
   @Override
-  public void sendEmail(String to, String cc, String bcc, String sub, String mes, String log) {
+  public void sendEmail(String to, String cc, String bcc, String sub, String mes) {
     
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-    simpleMailMessage.setFrom(log);
     simpleMailMessage.setTo(to);
     if (cc != null && cc != "") {
       simpleMailMessage.setCc(cc);
