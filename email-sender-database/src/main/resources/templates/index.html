@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+ 
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+<script src= "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
+<title>emails</title>
+</head>
+<body>
+<div>
+<h2 >Spring Boot Email Sender</h2>
+<tr>
+<div align = "left" >   
+     <h3><a  th:href="@{'/connect'}">Connect</a></h3>    
+    </div>
+</tr>
+<tr>
+<h2>Emails sent</h2>
+<div class="col-sm-5" align = "center">
+                 <div class="panel-body" align = "center" >
+                 <table class="table">
+  <thead class="thead-dark">
+    <tr>
+       <th>Email ID</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Cc</th>
+            <th>Bcc</th>
+            <th>Subject</th>
+            <th>message</th>
+   </tr>
+  </thead>
+  <tbody>
+      <tr  th:each="emailMessage : ${listemail }">
+<td th:text="${emailMessage.id}">Email ID</td>
+<td th:text="${emailMessage.from}">From</td>
+<td th:text="${emailMessage.to}">To</td>
+<td th:text="${emailMessage.cc}">Cc</td>
+<td th:text="${emailMessage.bcc}">Bcc</td>
+<td th:text="${emailMessage.subject}">Subject</td>
+<td th:text="${emailMessage.message}">Message</td> 
+<td>
+<a th:href="@{'/delete/' + ${emailMessage.id}}">Delete</a>
+</td>     
+</tr>
+  
+  </tbody>
+</table>
+                    
+                 </div>
+ 
+            </div>
+ 
+</tr>
+ 
+</tbody>
+</table>
+<tr>
+<div align = "left" >   
+     <h3><a  th:href="@{'/send'}">send email (requires connecting first)</a></h3>    
+    </div>
+</tr>
+<div>
+</body>
+</html>
