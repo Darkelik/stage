@@ -26,8 +26,8 @@ public class EmailController {
 	private EmailServiceImpl service = new EmailServiceImpl();
 	
 	@GetMapping("/emails")
-	public List<EmailMessage> listAll(){
-		return service.getRepository().findAll();
+	public ResponseEntity<List<EmailMessage>> listAll(){
+		return ResponseEntity.ok().body(service.getRepository().findAll());
 	}
 	
 	@GetMapping("/emails/{id}")
