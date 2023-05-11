@@ -30,17 +30,17 @@ public class EmailController {
 		return service.getRepository().findAll();
 	}
 	
-	@DeleteMapping("/{id}")
+	@GetMapping("/emails/{id}")
+	public ResponseEntity<EmailMessage> getEmailById(@PathVariable(value = "id") long emailId) throws Exception{
+		EmailMessage email = service.getRepository().findById(emailId).orElseThrow(() -> new Exception("Not Found"));
+		return ResponseEntity.ok().body(email);
+	}
+	
+	@DeleteMapping("/emails/{id}")
 	public ResponseEntity<String> deleteById(@PathVariable(value = "id") long emailId) throws Exception{
 		service.getRepository().findById(emailId).orElseThrow(() -> new Exception("Not Found"));
 		service.getRepository().deleteById(emailId);
 		return ResponseEntity.ok().body("email n°" + emailId + " deleted successfully.");
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<EmailMessage> getEmailById(@PathVariable(value = "id") long emailId) throws Exception{
-		EmailMessage email = service.getRepository().findById(emailId).orElseThrow(() -> new Exception("Not Found"));
-		return ResponseEntity.ok().body(email);
 	}
 	
 	@PutMapping("/connect")
