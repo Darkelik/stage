@@ -26,7 +26,7 @@ public class EmailController {
 	private EmailServiceImpl service = new EmailServiceImpl();
 	
 	@GetMapping("/emails")
-	public ResponseEntity<List<EmailMessage>> listAll(){
+	public ResponseEntity<List<EmailMessage>> getAllEmails(){
 		return ResponseEntity.ok().body(service.getRepository().findAll());
 	}
 	
@@ -37,7 +37,7 @@ public class EmailController {
 	}
 	
 	@DeleteMapping("/emails/{id}")
-	public ResponseEntity<String> deleteById(@PathVariable(value = "id") long emailId) throws Exception{
+	public ResponseEntity<String> deleteEmail(@PathVariable(value = "id") long emailId) throws Exception{
 		service.getRepository().findById(emailId).orElseThrow(() -> new Exception("Not Found"));
 		service.getRepository().deleteById(emailId);
 		return ResponseEntity.ok().body("email n°" + emailId + " deleted successfully.");

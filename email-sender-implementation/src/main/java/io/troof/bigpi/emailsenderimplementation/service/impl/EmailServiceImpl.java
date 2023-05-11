@@ -1,6 +1,8 @@
 package io.troof.bigpi.emailsenderimplementation.service.impl;
 
 import java.util.Properties;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -60,4 +62,30 @@ public class EmailServiceImpl implements EmailService {
   public EmailRepository getRepository() {
 	  return repository;
   }
+  
+  public void setRepository(EmailRepository repository) {
+	  this.repository = repository;
+  }
+
+public JavaMailSenderImpl getMailSender() {
+	return mailSender;
+}
+
+public void setMailSender(JavaMailSenderImpl mailSender) {
+	this.mailSender = mailSender;
+}
+  
+  public List<EmailMessage> getAllEmails(){
+	  return repository.findAll();
+  }
+  
+  public Optional<EmailMessage> getEmailById(long id){
+	  return repository.findById(id);
+  }
+
+  @Override
+  public void deleteEmail(long l) {
+	  repository.deleteById(l);	
+  }
+  
 }
