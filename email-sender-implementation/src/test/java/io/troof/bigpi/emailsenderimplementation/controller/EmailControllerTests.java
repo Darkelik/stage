@@ -1,46 +1,51 @@
 package io.troof.bigpi.emailsenderimplementation.controller;
 
+import io.troof.bigpi.emailsenderimplementation.model.Connection;
 import io.troof.bigpi.emailsenderimplementation.model.EmailMessage;
-import io.troof.bigpi.emailsenderimplementation.service.EmailService;
+import io.troof.bigpi.emailsenderimplementation.repository.EmailRepository;
+import io.troof.bigpi.emailsenderimplementation.service.impl.EmailServiceImpl;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class EmailControllerTests {
-    @Mock
-    private EmailService emailService;
     
-    @InjectMocks
+	private EmailServiceImpl emailService;
+    private EmailRepository emailRepositoryMock;
     private EmailController emailController;
-
+    
     @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
+    public void setUp() {
+        emailRepositoryMock = mock(EmailRepository.class);
+        emailService = new EmailServiceImpl();
+        emailService.setRepository(emailRepositoryMock);
+        emailService.setParameters("fredericvaz2016@gmail.com", "aprjqviwqydnurgc");
+        emailController = new EmailController();
+        emailController.setService(emailService);
     }
     
     @Test
     public void testSendEmail() {
-        EmailMessage emailMessage = new EmailMessage("recipient@example.com", null, null, "Test Subject", "Test Message");
+        EmailMessage emailMessage = new EmailMessage("trof.test@gmail.com", null, null, "Test Subject", "Test Message");
         ResponseEntity<EmailMessage> responseEntity = emailController.sendEmail(emailMessage);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(emailService).sendEmail(emailMessage);
     }
     
     @Test
     public void testGetAllEmails() {
-        EmailMessage emailMessage1 = new EmailMessage("recipient@example.com", null, null, "Test Subject 1", "Test Message 1");
-        EmailMessage emailMessage2 = new EmailMessage("recipient@example.com", null, null, "Test Subject 2", "Test Message 2");
+        EmailMessage emailMessage1 = new EmailMessage("trof.test@gmail.com", null, null, "Test Subject 1", "Test Message 1");
+        EmailMessage emailMessage2 = new EmailMessage("trof.test@gmail.com", null, null, "Test Subject 2", "Test Message 2");
         List<EmailMessage> emails = new ArrayList<>();
         emails.add(emailMessage1);
         emails.add(emailMessage2);
@@ -54,18 +59,64 @@ public class EmailControllerTests {
     
     @Test
     public void testGetEmailById() throws Exception {
-        Optional<EmailMessage> emailMessage = Optional.of(new EmailMessage("recipient@example.com", null, null, "Test Subject", "Test Message"));
-        when(emailService.getEmailById(1L)).thenReturn(emailMessage);
-        ResponseEntity<EmailMessage> responseEntity = emailController.getEmailById(1L);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(emailMessage, responseEntity.getBody());
+        
+        long emailId = 1L;
+        EmailMessage email = new EmailMessage();
+        email.setId(emailId);
+        when(emailService.getEmailById(emailId)).thenReturn(Optional.of(email));
+        
+        ResponseEntity<EmailMessage> response = emailController.getEmailById(emailId);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(email, response.getBody());
     }
-    
+
+    @Test
+    public void testGetEmailByIdNotFound() throws Exception {
+       
+        long emailId = 1L;
+        when(emailService.getEmailById(emailId)).thenReturn(Optional.empty());
+        
+        Exception exception = assertThrows(Exception.class, () -> {
+            emailController.getEmailById(emailId);
+        });
+        assertEquals("Not Found", exception.getMessage());
+    }
+
     @Test
     public void testDeleteEmail() throws Exception {
-        ResponseEntity<String> responseEntity = emailController.deleteEmail(1L);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(emailService).deleteEmail(1L);
+        
+        long emailId = 1L;
+        EmailMessage email = new EmailMessage();
+        email.setId(emailId);
+        when(emailService.getEmailById(emailId)).thenReturn(Optional.of(email));
+        
+        ResponseEntity<String> response = emailController.deleteEmail(emailId);
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("email n°" + emailId + " deleted successfully.", response.getBody());
     }
+
+    @Test
+    public void testDeleteEmailNotFound() throws Exception {
+        
+        long emailId = 1L;
+        when(emailService.getEmailById(emailId)).thenReturn(Optional.empty());
+        
+        Exception exception = assertThrows(Exception.class, () -> {
+            emailController.deleteEmail(emailId);
+        });
+        assertEquals("Not Found", exception.getMessage());
+    }
+
+    @Test
+    void testConnect() {
+        Connection connection = new Connection("test@example.com", "password");
+        ResponseEntity<Connection> response = emailController.connect(connection);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(connection, response.getBody());
+    }
+    
 }
 

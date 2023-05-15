@@ -32,14 +32,14 @@ public class EmailController {
 	
 	@GetMapping("/emails/{id}")
 	public ResponseEntity<EmailMessage> getEmailById(@PathVariable(value = "id") long emailId) throws Exception{
-		EmailMessage email = service.getRepository().findById(emailId).orElseThrow(() -> new Exception("Not Found"));
+		EmailMessage email = service.getEmailById(emailId).orElseThrow(() -> new Exception("Not Found"));
 		return ResponseEntity.ok().body(email);
 	}
 	
 	@DeleteMapping("/emails/{id}")
 	public ResponseEntity<String> deleteEmail(@PathVariable(value = "id") long emailId) throws Exception{
-		service.getRepository().findById(emailId).orElseThrow(() -> new Exception("Not Found"));
-		service.getRepository().deleteById(emailId);
+		service.getEmailById(emailId).orElseThrow(() -> new Exception("Not Found"));
+		service.deleteEmail(emailId);
 		return ResponseEntity.ok().body("email n°" + emailId + " deleted successfully.");
 	}
 	
@@ -53,5 +53,9 @@ public class EmailController {
 	public ResponseEntity<EmailMessage> sendEmail(@Valid @RequestBody EmailMessage email){
 		service.sendEmail(email);
 		return ResponseEntity.ok().body(email);
+	}
+	
+	public void setService(EmailServiceImpl service) {
+		this.service = service;
 	}
 }
