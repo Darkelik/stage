@@ -1,17 +1,15 @@
 package io.troof.bigpi.emailsenderimplementation.service.impl;
 
-import java.util.Properties;
+import io.troof.bigpi.emailsenderimplementation.model.EmailMessage;
+import io.troof.bigpi.emailsenderimplementation.repository.EmailRepository;
+import io.troof.bigpi.emailsenderimplementation.service.EmailService;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-
-import io.troof.bigpi.emailsenderimplementation.repository.EmailRepository;
-import io.troof.bigpi.emailsenderimplementation.model.EmailMessage;
-import io.troof.bigpi.emailsenderimplementation.service.EmailService;
 
 /** Email sender. */
 @Service
@@ -22,15 +20,16 @@ public class EmailServiceImpl implements EmailService {
   @Autowired
   private EmailRepository repository;
   
+  /** Constructor. */
   public EmailServiceImpl() {
     this.mailSender = new JavaMailSenderImpl();
     mailSender.setHost("smtp.gmail.com");
-	mailSender.setPort(587);
-	Properties props = mailSender.getJavaMailProperties();
-	props.put("mail.transport.protocol", "smtp");
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.debug", "true");
+    mailSender.setPort(587);
+    Properties props = mailSender.getJavaMailProperties();
+    props.put("mail.transport.protocol", "smtp");
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.debug", "true");
   }
 
   @Override
@@ -55,37 +54,37 @@ public class EmailServiceImpl implements EmailService {
   }
   
   public void setParameters(String email, String password) {
-	  mailSender.setUsername(email);
-	  mailSender.setPassword(password);
+    mailSender.setUsername(email);
+    mailSender.setPassword(password);
   }
   
   public EmailRepository getRepository() {
-	  return repository;
+    return repository;
   }
   
   public void setRepository(EmailRepository repository) {
-	  this.repository = repository;
+    this.repository = repository;
   }
 
-public JavaMailSenderImpl getMailSender() {
-	return mailSender;
-}
+  public JavaMailSenderImpl getMailSender() {
+    return mailSender;
+  }
 
-public void setMailSender(JavaMailSenderImpl mailSender) {
-	this.mailSender = mailSender;
-}
-  
-  public List<EmailMessage> getAllEmails(){
-	  return repository.findAll();
+  public void setMailSender(JavaMailSenderImpl mailSender) {
+    this.mailSender = mailSender;
   }
   
-  public Optional<EmailMessage> getEmailById(long id){
-	  return repository.findById(id);
+  public List<EmailMessage> getAllEmails() {
+    return repository.findAll();
+  }
+  
+  public Optional<EmailMessage> getEmailById(long id) {
+    return repository.findById(id);
   }
 
   @Override
   public void deleteEmail(long l) {
-	  repository.deleteById(l);	
+    repository.deleteById(l);
   }
   
 }

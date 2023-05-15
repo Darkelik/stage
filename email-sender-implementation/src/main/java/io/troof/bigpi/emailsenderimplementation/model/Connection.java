@@ -1,30 +1,30 @@
 package io.troof.bigpi.emailsenderimplementation.model;
 
+/** Connection class (used only for connection schema). */
 public class Connection {
-	
-	private String email;
-	private String password;
-	
-	public Connection(String email, String password) {
-		super();
-		this.email = email;
-		this.password = password;
-	}
 
-	public String getEmail() {
-		return email;
-	}
+  private String email;
+  private String password;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public Connection(String email, String password) {
+    this.email = email;
+    this.password = password;
+  }
 
-	public String getPassword() {
-		return password;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
 }
