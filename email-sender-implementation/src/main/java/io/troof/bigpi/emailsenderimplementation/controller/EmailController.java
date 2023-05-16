@@ -31,7 +31,7 @@ public class EmailController {
 
   /** Get all information about specified email. */
   @GetMapping("/emails/{id}")
-  public ResponseEntity<?> getEmailById(@PathVariable(value = "id") long emailId) throws Exception {
+  public ResponseEntity<?> getEmailById(@PathVariable(value = "id") long emailId) {
     try {
       EmailMessage email = service.getEmailById(emailId)
           .orElseThrow(() -> new Exception("Not Found"));
