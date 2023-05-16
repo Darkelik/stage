@@ -69,6 +69,19 @@ class EmailSenderImplementationApplicationTests {
     // TEST 2 : Sending some e-mails.
     // The emailMessage requires "to", "cc", "bcc", "subject" and "message" fields.
     // "cc" and "bcc" fields can be left empty, but can only contain one email address.
+    
+    /* example :
+
+    {
+        "to" : "troof.test@gmail.com",
+        "cc" : "fredericvaz2016@gmail.com",
+        "bcc" : "",
+        "subject" : "Test subject",
+        "message" : "Test message"
+    }
+ 
+    */
+    
     // "id" and "from" are automatically set.
     // Those e-mails will be stored in database, keeping track of what the user sent.
     // All e-mails are removed from database when the application is restarted.
