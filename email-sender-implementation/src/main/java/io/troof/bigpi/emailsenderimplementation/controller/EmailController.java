@@ -61,16 +61,18 @@ public class EmailController {
     }
   }
 
+  /** Put method for setting user connection information. */
   @PutMapping("/connect")
-  public ResponseEntity<Connection> connect(@Valid @RequestBody Connection connection) {
+  public ResponseEntity<String> connect(@Valid @RequestBody Connection connection) {
     service.setParameters(connection.getEmail(), connection.getPassword());
-    return ResponseEntity.ok().body(connection);
+    return ResponseEntity.ok().body("using " + connection.getEmail() + " with "
+        + connection.getPassword() + ".\nMake sure this information is correct.");
   }
 
   @PostMapping("/send")
-  public ResponseEntity<EmailMessage> sendEmail(@Valid @RequestBody EmailMessage email) {
+  public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailMessage email) {
     service.sendEmail(email);
-    return ResponseEntity.ok().body(email);
+    return ResponseEntity.ok().body("email n°" + email.getId() + " successfully sent.");
   }
 
   public void setService(EmailServiceImpl service) {

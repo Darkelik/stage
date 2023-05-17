@@ -38,7 +38,7 @@ public class EmailControllerTests {
   @Test
   public void testSendEmail() {
     EmailMessage emailMessage = new EmailMessage("trof.test@gmail.com", null, null, "Sub", "Mes");
-    ResponseEntity<EmailMessage> responseEntity = emailController.sendEmail(emailMessage);
+    ResponseEntity<String> responseEntity = emailController.sendEmail(emailMessage);
     
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
@@ -107,7 +107,9 @@ public class EmailControllerTests {
     ResponseEntity<?> response = emailController.connect(connection);
     
     assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(connection, response.getBody());
+    assertEquals("using " + connection.getEmail() + " with "
+            + connection.getPassword() + ".\nMake sure this information is correct.",
+            response.getBody());
   }
     
 }

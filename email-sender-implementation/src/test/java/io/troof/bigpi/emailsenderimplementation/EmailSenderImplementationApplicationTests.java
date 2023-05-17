@@ -2,6 +2,7 @@ package io.troof.bigpi.emailsenderimplementation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.troof.bigpi.emailsenderimplementation.controller.EmailController;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 class EmailSenderImplementationApplicationTests {
 
   private EmailServiceImpl emailService;
+  @Mock
   private EmailRepository emailRepositoryMock;
   private EmailController emailController;
   
@@ -61,10 +64,12 @@ class EmailSenderImplementationApplicationTests {
     // Connect at localhost:8080/api/emailsender/connect, in PUT mode.
 
     Connection connection = new Connection("fredericvaz2016@gmail.com", "aprjqviwqydnurgc");
-    ResponseEntity<Connection> response1 = emailController.connect(connection);
+    ResponseEntity<String> response1 = emailController.connect(connection);
     
     assertEquals(HttpStatus.OK, response1.getStatusCode());
-    assertEquals(connection, response1.getBody());
+    assertEquals("using " + connection.getEmail() + " with "
+            + connection.getPassword() + ".\nMake sure this information is correct.",
+            response1.getBody());
     
     // TEST 2 : Sending some e-mails.
     // The emailMessage requires "to", "cc", "bcc", "subject" and "message" fields.
@@ -97,10 +102,11 @@ class EmailSenderImplementationApplicationTests {
             "Message"
         );
     
-    ResponseEntity<EmailMessage> response2; 
+    ResponseEntity<String> response2; 
     
     response2 = emailController.sendEmail(message1);
     assertEquals(HttpStatus.OK, response2.getStatusCode());
+    verify(emailRepositoryMock).save(message1);
     
     // e-mail without bcc.
     EmailMessage message2 = new EmailMessage(
@@ -113,6 +119,7 @@ class EmailSenderImplementationApplicationTests {
     
     response2 = emailController.sendEmail(message2);
     assertEquals(HttpStatus.OK, response2.getStatusCode());
+    verify(emailRepositoryMock).save(message2);
     
     // full e-mail.
     EmailMessage message3 = new EmailMessage(
@@ -125,6 +132,7 @@ class EmailSenderImplementationApplicationTests {
     
     response2 = emailController.sendEmail(message3);
     assertEquals(HttpStatus.OK, response2.getStatusCode());
+    verify(emailRepositoryMock).save(message3);
     
     // TEST 3 : Check all e-mails sent with the application.
     // This function is used to check all e-mails sent with the app since its last restart.
@@ -146,6 +154,7 @@ class EmailSenderImplementationApplicationTests {
     assertEquals(message1, response3.getBody().get(0));
     assertEquals(message2, response3.getBody().get(1));
     assertEquals(message3, response3.getBody().get(2));
+    verify(emailRepositoryMock).findAll();
     
     // TEST 4 : Check a specific e-mail sent with the application.
     // This function is used to check the details of a specified e-mail id.
@@ -158,6 +167,7 @@ class EmailSenderImplementationApplicationTests {
     
     assertEquals(HttpStatus.OK, response4.getStatusCode());
     assertEquals(message2, response4.getBody());
+    verify(emailRepositoryMock).findById(2L);
     
     // TEST 5 : Check a specific e-mail, but the id doesn't exist.
     // This is the same test as the last one, except we use an inexistent id.
@@ -181,6 +191,7 @@ class EmailSenderImplementationApplicationTests {
     
     assertEquals(HttpStatus.OK, response6.getStatusCode());
     assertEquals("email n°1 deleted successfully.", response6.getBody());
+    verify(emailRepositoryMock).deleteById(1L);
     
     // TEST 7 : Delete a specific e-mail, but the id doesn't exist.
     // This is the same test as the last one, except we use an inexistent id.
