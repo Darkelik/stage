@@ -1,8 +1,18 @@
 package io.troof.bigpi.emailsenderui.resource;
 
-/** Connection class (used only for connection schema). */
-public class Connection {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+/** Connection class (used only for connection schema). */
+@Entity
+@Table(name = "users")
+public class User {
+
+  private long id;
   private String name;
   private String email;
   private String password;
@@ -14,22 +24,33 @@ public class Connection {
   private String debug;
   
 
-  
-
-  public Connection(String name, String email, String password, String host, int port, String protocol, String auth,
-		String starttls, String debug) {
-	this.name = name;
-	this.email = email;
-	this.password = password;
-	this.host = host;
-	this.port = port;
-	this.protocol = protocol;
-	this.auth = auth;
-	this.startTls = starttls;
-	this.debug = debug;
+  public User(Connection connection) {
+	this.name = connection.getName();
+	this.email = connection.getEmail();
+	this.password = connection.getPassword();
+	this.host = connection.getHost();
+	this.port = connection.getPort();
+	this.protocol = connection.getProtocol();
+	this.auth = connection.getAuth();
+	this.startTls = connection.getStartTls();
+	this.debug = connection.getDebug();
   }
 
 
+@Id
+@GeneratedValue(strategy = GenerationType.AUTO)
+public long getId() {
+	return id;
+}
+
+
+
+public void setId(long id) {
+	this.id = id;
+}
+
+
+@Column(name = "name")
 public String getName() {
 	return name;
 }
@@ -41,6 +62,7 @@ public void setName(String name) {
 }
 
 
+@Column(name = "email")
 public String getEmail() {
 	return email;
 }
@@ -52,6 +74,7 @@ public void setEmail(String email) {
 }
 
 
+@Column(name = "password")
 public String getPassword() {
 	return password;
 }
@@ -63,6 +86,7 @@ public void setPassword(String password) {
 }
 
 
+@Column(name = "host")
 public String getHost() {
 	return host;
 }
@@ -74,6 +98,7 @@ public void setHost(String host) {
 }
 
 
+@Column(name = "port")
 public int getPort() {
 	return port;
 }
@@ -85,6 +110,7 @@ public void setPort(int port) {
 }
 
 
+@Column(name = "protocol")
 public String getProtocol() {
 	return protocol;
 }
@@ -96,6 +122,7 @@ public void setProtocol(String protocol) {
 }
 
 
+@Column(name = "auth")
 public String getAuth() {
 	return auth;
 }
@@ -107,6 +134,7 @@ public void setAuth(String auth) {
 }
 
 
+@Column(name = "StartTls")
 public String getStartTls() {
 	return startTls;
 }
@@ -118,6 +146,7 @@ public void setStartTls(String startTls) {
 }
 
 
+@Column(name = "debug")
 public String getDebug() {
 	return debug;
 }

@@ -2,7 +2,10 @@ package io.troof.bigpi.emailsenderui.controller;
 
 import io.troof.bigpi.emailsenderui.resource.Connection;
 import io.troof.bigpi.emailsenderui.resource.EmailMessage;
+import io.troof.bigpi.emailsenderui.resource.SmallConnection;
+import io.troof.bigpi.emailsenderui.resource.User;
 import io.troof.bigpi.emailsenderui.service.impl.EmailServiceImpl;
+import io.troof.bigpi.emailsenderui.service.impl.UserServiceImpl;
 
 import javax.validation.Valid;
 
@@ -21,8 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EmailController {
 
-	@Autowired
+	  @Autowired
 	  private EmailServiceImpl service = new EmailServiceImpl();
+	  
+	  @Autowired
+	  private UserServiceImpl userService = new UserServiceImpl();
 
 	  @GetMapping("/emails")
 	  public ResponseEntity<List<EmailMessage>> getAllEmails() {
@@ -61,16 +67,40 @@ public class EmailController {
 	    }
 	  }
 
+	  @PostMapping("/register")
+	  public ResponseEntity<String> register(@Valid @RequestBody Connection connection){
+		  User newUser = new User(connection);
+		  userService.register(newUser);
+		  return ResponseEntity.ok().body("User " + connection.getEmail() + " successfully registered.");
+	  }
+	  
 	  /** Put method for setting user connection information. */
 	  @PutMapping("/connect")
-	  public ResponseEntity<String> connect(@Valid @RequestBody Connection connection) {
-	    service.setParameters(connection.getEmail(), connection.getPassword());
-	    return ResponseEntity.ok().body("using " + connection.getEmail() + " with "
-	        + connection.getPassword() + ".\nMake sure this information is correct.");
+	  public ResponseEntity<String> connect(@Valid @RequestBody SmallConnection connection) {
+	    if (userService.getConnectedUser() != null) {
+	    	return ResponseEntity.badRequest().body(userService.getConnectedUser().getEmail() + " is already connected.");
+	    }
+	    boolean success = userService.connect(connection);
+	    if (success) {
+	    	return ResponseEntity.ok().body(connection.getEmail() + " successfully connected.");
+	    } else {
+	    	return ResponseEntity.badRequest().body(connection.getEmail() + " is not regitered.");
+	    }
+	  }
+	  
+	  @PutMapping("/disconnect")
+	  public ResponseEntity<String> disconnect(){
+		  if (userService.getConnectedUser() == null) {
+			  return ResponseEntity.badRequest().body("No one is connected.");
+		  }
+		  User user = userService.getConnectedUser();
+		  userService.disconnect();
+		  return ResponseEntity.ok().body(user.getEmail() + " successfully disconnected.");
 	  }
 
 	  @PostMapping("/send")
 	  public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailMessage email) {
+		service.initValues(userService.getConnectedUser());
 	    service.sendEmail(email);
 	    return ResponseEntity.ok().body("email n°" + email.getId() + " successfully sent.");
 	  }
