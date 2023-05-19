@@ -24,13 +24,16 @@ public class EmailServiceImpl implements EmailService {
   /** Constructor. */
   public EmailServiceImpl() {
     this.mailSender = new JavaMailSenderImpl();
-    mailSender.setHost("smtp.gmail.com");
-    mailSender.setPort(587);
-    Properties props = mailSender.getJavaMailProperties();
-    props.put("mail.transport.protocol", "smtp");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
-    props.put("mail.debug", "true");
+  }
+  
+  public void initValues(String host, int port, String protocol, String auth, String startTls, String debug) {
+	  mailSender.setHost(host);
+	  mailSender.setPort(port);
+	  Properties props = mailSender.getJavaMailProperties();
+	  props.put("mail.transport.protocol", protocol);
+	  props.put("mail.smtp.auth", auth);
+	  props.put("mail.smtp.starttls.enable", startTls);
+	  props.put("mail.debug", debug);
   }
 
   @Override
