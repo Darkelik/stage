@@ -23,6 +23,9 @@ public class User {
   private String startTls;
   private String debug;
   
+  public User() {
+	  
+  }
 
   public User(Connection connection) {
 	this.name = connection.getName();

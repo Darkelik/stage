@@ -45,7 +45,7 @@ public class EmailController {
 	      return ResponseEntity.ok().body(email);
 	    } catch (Exception e) {
 	      if (e.getMessage() == "Not Found") {
-	        return ResponseEntity.badRequest().body("auto email with id " + emailId + " doesn't exist.");
+	        return ResponseEntity.badRequest().body("Auto email with id " + emailId + " doesn't exist.");
 	      } else {
 	        return ResponseEntity.badRequest().body(e.getMessage());
 	      }
@@ -58,10 +58,10 @@ public class EmailController {
 	    try {
 	      service.getEmailById(emailId).orElseThrow(() -> new Exception("Not Found"));
 	      service.deleteAutoEmail(emailId);
-	      return ResponseEntity.ok().body("auto email with id " + emailId + " deleted successfully.");
+	      return ResponseEntity.ok().body("Auto email with id " + emailId + " deleted successfully.");
 	    } catch (Exception e) {
 	      if (e.getMessage() == "Not Found") {
-	        return ResponseEntity.badRequest().body("auto email with id " + emailId + " doesn't exist.");
+	        return ResponseEntity.badRequest().body("Auto email with id " + emailId + " doesn't exist.");
 	      } else {
 	        return ResponseEntity.badRequest().body(e.getMessage());
 	      }
@@ -101,23 +101,32 @@ public class EmailController {
 
 	  @PostMapping("/send")
 	  public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailMessage email) {
-		service.initValues(userService.getConnectedUser());
-	    service.sendEmail(email);
-	    return ResponseEntity.ok().body("email successfully sent.");
+		User user = userService.getConnectedUser();
+		if (user == null) {
+			return ResponseEntity.badRequest().body("No user is connected.");
+		}
+		service.initValues(user);
+	    service.sendEmail(email, userService.getConnectedUser().getEmail());
+	    return ResponseEntity.ok().body("Email successfully sent.");
 	  }
 	  
 	  @PostMapping("/create")
 	  public ResponseEntity<String> prepareAutoEmail(@Valid @RequestBody AutoEmail email){
 		  service.saveAutoEmail(email);
-		  return ResponseEntity.ok().body("auto email with id " + email.getId() + " successfully created.");
+		  return ResponseEntity.ok().body("Auto email with id " + email.getId() + " successfully created.");
 	  }
 	  
 	  @PostMapping("/autosend")
 	  public ResponseEntity<?> sendAutoEmail(@Valid @RequestBody String id){
+		  User user = userService.getConnectedUser();
+		  if (user == null) {
+			  return ResponseEntity.badRequest().body("No user is connected.");
+		  }
 		  try {
 			  AutoEmail email = service.getEmailById(id).orElseThrow(() -> new Exception("Not Found"));
-			  service.sendAutoEmail(email);
-			  return ResponseEntity.ok().body("auto email with id " + id + " successfully sent.");
+			  service.initValues(user);
+			  service.sendAutoEmail(email, userService.getConnectedUser().getEmail());
+			  return ResponseEntity.ok().body("Auto email with id " + id + " successfully sent.");
 		  } catch (Exception e) {
 			  if (e.getMessage() == "Not Found") {
 				  return ResponseEntity.badRequest().body("auto email with id " + id + " doesn't exist.");

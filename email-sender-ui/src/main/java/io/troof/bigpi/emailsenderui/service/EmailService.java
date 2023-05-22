@@ -8,7 +8,7 @@ import io.troof.bigpi.emailsenderui.resource.EmailMessage;
 
 /** Email sender interface. */
 public interface EmailService {
-  public void sendEmail(EmailMessage email);
+  public void sendEmail(EmailMessage email, String from);
   
   public List<AutoEmail> getAllEmails();
   
@@ -16,5 +16,5 @@ public interface EmailService {
   
   public void deleteAutoEmail(String id);
   
-  public void sendAutoEmail (AutoEmail email);
+  public void sendAutoEmail (AutoEmail email, String from);
 }

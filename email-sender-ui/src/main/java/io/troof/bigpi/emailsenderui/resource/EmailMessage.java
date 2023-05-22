@@ -3,7 +3,6 @@ package io.troof.bigpi.emailsenderui.resource;
 /** EmailMessage class, used for schema and database storage. */
 public class EmailMessage {
 
-  private String from;
   private String to;
   private String cc;
   private String bcc;
@@ -21,14 +20,6 @@ public class EmailMessage {
     this.bcc = bcc;
     this.subject = subject;
     this.message = message;
-  }
-
-  public String getFrom() {
-    return from;
-  }
-
-  public void setFrom(String from) {
-    this.from = from;
   }
 
   public String getTo() {

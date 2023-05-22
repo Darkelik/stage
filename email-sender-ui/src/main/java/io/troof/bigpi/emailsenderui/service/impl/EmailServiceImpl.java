@@ -42,17 +42,18 @@ public class EmailServiceImpl implements EmailService {
   }
 
   @Override
-  public void sendEmail(EmailMessage email) {
+  public void sendEmail(EmailMessage email, String from) {
     
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-    email.setFrom(mailSender.getUsername());
-    simpleMailMessage.setFrom(email.getFrom());
+    simpleMailMessage.setFrom(from);
     simpleMailMessage.setTo(email.getTo().split(","));
-    if (email.getCc() != null && email.getCc() != "") {
-      simpleMailMessage.setCc(email.getCc().split(","));
+    String cc = email.getCc();
+    if (cc != null && cc.length() > 0) {
+      simpleMailMessage.setCc(cc.split(","));
     }
-    if (email.getBcc() != null && email.getBcc() != "") {
-      simpleMailMessage.setBcc(email.getBcc().split(","));
+    String bcc = email.getBcc();
+    if (bcc != null && bcc.length() > 0) {
+      simpleMailMessage.setBcc(bcc.split(","));
     }
     simpleMailMessage.setSubject(email.getSubject());
     simpleMailMessage.setText(email.getMessage());
@@ -92,7 +93,8 @@ public class EmailServiceImpl implements EmailService {
 	  repository.save(email);
   }
   
-  public void sendAutoEmail(AutoEmail email) {
-	  sendEmail(email.getMessage());
+  public void sendAutoEmail(AutoEmail email, String from) {
+	  EmailMessage mail = new EmailMessage(email.getTo(), email.getCc(), email.getBcc(), email.getSubject(), email.getMessage());
+	  sendEmail(mail, from);
   }
 }
