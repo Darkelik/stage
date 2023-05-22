@@ -3,15 +3,18 @@ package io.troof.bigpi.emailsenderui.service;
 import java.util.List;
 import java.util.Optional;
 
+import io.troof.bigpi.emailsenderui.resource.AutoEmail;
 import io.troof.bigpi.emailsenderui.resource.EmailMessage;
 
 /** Email sender interface. */
 public interface EmailService {
   public void sendEmail(EmailMessage email);
   
-  public List<EmailMessage> getAllEmails();
+  public List<AutoEmail> getAllEmails();
   
-  public Optional<EmailMessage> getEmailById(long l);
+  public Optional<AutoEmail> getEmailById(String id);
   
-  public void deleteEmail(long l);
+  public void deleteAutoEmail(String id);
+  
+  public void sendAutoEmail (AutoEmail email);
 }

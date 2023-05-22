@@ -1,6 +1,6 @@
 package io.troof.bigpi.emailsenderui.resource;
 
-/** Connection class (used only for connection schema). */
+/** Connection class (used for connection schema). */
 public class Connection {
 
   private String name;

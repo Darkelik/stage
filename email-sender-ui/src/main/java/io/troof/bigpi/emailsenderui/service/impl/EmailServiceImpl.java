@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import io.troof.bigpi.emailsenderui.repository.EmailRepository;
+import io.troof.bigpi.emailsenderui.resource.AutoEmail;
 import io.troof.bigpi.emailsenderui.resource.EmailMessage;
 import io.troof.bigpi.emailsenderui.resource.User;
 import io.troof.bigpi.emailsenderui.service.EmailService;
@@ -56,8 +57,6 @@ public class EmailServiceImpl implements EmailService {
     simpleMailMessage.setSubject(email.getSubject());
     simpleMailMessage.setText(email.getMessage());
     
-    repository.save(email);
-    
     this.mailSender.send(simpleMailMessage);
   }
   
@@ -77,17 +76,23 @@ public class EmailServiceImpl implements EmailService {
     this.mailSender = mailSender;
   }
   
-  public List<EmailMessage> getAllEmails() {
+  public List<AutoEmail> getAllEmails() {
     return repository.findAll();
   }
   
-  public Optional<EmailMessage> getEmailById(long id) {
+  public Optional<AutoEmail> getEmailById(String id) {
     return repository.findById(id);
   }
 
-  @Override
-  public void deleteEmail(long l) {
-    repository.deleteById(l);
+  public void deleteAutoEmail(String id) {
+    repository.deleteById(id);
   }
   
+  public void saveAutoEmail(AutoEmail email) {
+	  repository.save(email);
+  }
+  
+  public void sendAutoEmail(AutoEmail email) {
+	  sendEmail(email.getMessage());
+  }
 }

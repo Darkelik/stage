@@ -1,5 +1,6 @@
 package io.troof.bigpi.emailsenderui.controller;
 
+import io.troof.bigpi.emailsenderui.resource.AutoEmail;
 import io.troof.bigpi.emailsenderui.resource.Connection;
 import io.troof.bigpi.emailsenderui.resource.EmailMessage;
 import io.troof.bigpi.emailsenderui.resource.SmallConnection;
@@ -31,38 +32,38 @@ public class EmailController {
 	  private UserServiceImpl userService = new UserServiceImpl();
 
 	  @GetMapping("/emails")
-	  public ResponseEntity<List<EmailMessage>> getAllEmails() {
+	  public ResponseEntity<List<AutoEmail>> getAllEmails() {
 	    return ResponseEntity.ok().body(service.getRepository().findAll());
 	  }
 
 	  /** Get all information about specified email. */
 	  @GetMapping("/emails/{id}")
-	  public ResponseEntity<?> getEmailById(@PathVariable(value = "id") long emailId) {
+	  public ResponseEntity<?> getEmailById(@PathVariable(value = "id") String emailId) {
 	    try {
-	      EmailMessage email = service.getEmailById(emailId)
+	      AutoEmail email = service.getEmailById(emailId)
 	          .orElseThrow(() -> new Exception("Not Found"));
 	      return ResponseEntity.ok().body(email);
 	    } catch (Exception e) {
 	      if (e.getMessage() == "Not Found") {
-	        return ResponseEntity.badRequest().body("email n°" + emailId + " doesn't exist.");
+	        return ResponseEntity.badRequest().body("auto email with id " + emailId + " doesn't exist.");
 	      } else {
-	        return ResponseEntity.badRequest().body("unknown error.");
+	        return ResponseEntity.badRequest().body(e.getMessage());
 	      }
 	    }
 	  }
 
 	  /** Delete specified email from database. */
 	  @DeleteMapping("/emails/{id}")
-	  public ResponseEntity<String> deleteEmail(@PathVariable(value = "id") long emailId) {
+	  public ResponseEntity<String> deleteAutoEmail(@PathVariable(value = "id")String emailId) {
 	    try {
 	      service.getEmailById(emailId).orElseThrow(() -> new Exception("Not Found"));
-	      service.deleteEmail(emailId);
-	      return ResponseEntity.ok().body("email n°" + emailId + " deleted successfully.");
+	      service.deleteAutoEmail(emailId);
+	      return ResponseEntity.ok().body("auto email with id " + emailId + " deleted successfully.");
 	    } catch (Exception e) {
 	      if (e.getMessage() == "Not Found") {
-	        return ResponseEntity.badRequest().body("email n°" + emailId + " doesn't exist.");
+	        return ResponseEntity.badRequest().body("auto email with id " + emailId + " doesn't exist.");
 	      } else {
-	        return ResponseEntity.badRequest().body("unknown error.");
+	        return ResponseEntity.badRequest().body(e.getMessage());
 	      }
 	    }
 	  }
@@ -102,7 +103,28 @@ public class EmailController {
 	  public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailMessage email) {
 		service.initValues(userService.getConnectedUser());
 	    service.sendEmail(email);
-	    return ResponseEntity.ok().body("email n°" + email.getId() + " successfully sent.");
+	    return ResponseEntity.ok().body("email successfully sent.");
+	  }
+	  
+	  @PostMapping("/create")
+	  public ResponseEntity<String> prepareAutoEmail(@Valid @RequestBody AutoEmail email){
+		  service.saveAutoEmail(email);
+		  return ResponseEntity.ok().body("auto email with id " + email.getId() + " successfully created.");
+	  }
+	  
+	  @PostMapping("/autosend")
+	  public ResponseEntity<?> sendAutoEmail(@Valid @RequestBody String id){
+		  try {
+			  AutoEmail email = service.getEmailById(id).orElseThrow(() -> new Exception("Not Found"));
+			  service.sendAutoEmail(email);
+			  return ResponseEntity.ok().body("auto email with id " + id + " successfully sent.");
+		  } catch (Exception e) {
+			  if (e.getMessage() == "Not Found") {
+				  return ResponseEntity.badRequest().body("auto email with id " + id + " doesn't exist.");
+			  } else {
+				  return ResponseEntity.badRequest().body(e.getMessage());
+			  }
+		  }
 	  }
 
 	  public void setService(EmailServiceImpl service) {
