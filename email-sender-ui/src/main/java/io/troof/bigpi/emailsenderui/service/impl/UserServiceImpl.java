@@ -44,5 +44,9 @@ public class UserServiceImpl implements UserService {
 	public User getConnectedUser() {
 		return connectedUser;
 	}
+	
+	public void setRepository(UserRepository repository) {
+	    this.repository = repository;
+	}
 
 }
