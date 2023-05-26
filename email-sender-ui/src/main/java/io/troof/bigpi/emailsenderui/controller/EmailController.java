@@ -26,21 +26,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
 	  @Autowired
-	  private EmailServiceImpl service = new EmailServiceImpl();
+	  private EmailServiceImpl emailService = new EmailServiceImpl();
 	  
 	  @Autowired
 	  private UserServiceImpl userService = new UserServiceImpl();
 
 	  @GetMapping("/emails")
 	  public ResponseEntity<List<AutoEmail>> getAllEmails() {
-	    return ResponseEntity.ok().body(service.getRepository().findAll());
+	    return ResponseEntity.ok().body(emailService.getRepository().findAll());
 	  }
 
 	  /** Get all information about specified email. */
 	  @GetMapping("/emails/{id}")
 	  public ResponseEntity<?> getEmailById(@PathVariable(value = "id") String emailId) {
 	    try {
-	      AutoEmail email = service.getEmailById(emailId)
+	      AutoEmail email = emailService.getEmailById(emailId)
 	          .orElseThrow(() -> new Exception("Not Found"));
 	      return ResponseEntity.ok().body(email);
 	    } catch (Exception e) {
@@ -56,8 +56,8 @@ public class EmailController {
 	  @DeleteMapping("/emails/{id}")
 	  public ResponseEntity<String> deleteAutoEmail(@PathVariable(value = "id")String emailId) {
 	    try {
-	      service.getEmailById(emailId).orElseThrow(() -> new Exception("Not Found"));
-	      service.deleteAutoEmail(emailId);
+	      emailService.getEmailById(emailId).orElseThrow(() -> new Exception("Not Found"));
+	      emailService.deleteAutoEmail(emailId);
 	      return ResponseEntity.ok().body("Auto email with id " + emailId + " deleted successfully.");
 	    } catch (Exception e) {
 	      if (e.getMessage() == "Not Found") {
@@ -85,7 +85,7 @@ public class EmailController {
 	    if (success) {
 	    	return ResponseEntity.ok().body(connection.getEmail() + " successfully connected.");
 	    } else {
-	    	return ResponseEntity.badRequest().body(connection.getEmail() + " is not regitered.");
+	    	return ResponseEntity.badRequest().body("Wrong email or password.");
 	    }
 	  }
 	  
@@ -105,14 +105,14 @@ public class EmailController {
 		if (user == null) {
 			return ResponseEntity.badRequest().body("No user is connected.");
 		}
-		service.initValues(user);
-	    service.sendEmail(email, userService.getConnectedUser().getEmail());
+		emailService.initValues(user);
+	    emailService.sendEmail(email, userService.getConnectedUser().getEmail());
 	    return ResponseEntity.ok().body("Email successfully sent.");
 	  }
 	  
 	  @PostMapping("/create")
 	  public ResponseEntity<String> prepareAutoEmail(@Valid @RequestBody AutoEmail email){
-		  service.saveAutoEmail(email);
+		  emailService.saveAutoEmail(email);
 		  return ResponseEntity.ok().body("Auto email with id " + email.getId() + " successfully created.");
 	  }
 	  
@@ -123,20 +123,24 @@ public class EmailController {
 			  return ResponseEntity.badRequest().body("No user is connected.");
 		  }
 		  try {
-			  AutoEmail email = service.getEmailById(id).orElseThrow(() -> new Exception("Not Found"));
-			  service.initValues(user);
-			  service.sendAutoEmail(email, userService.getConnectedUser().getEmail());
+			  AutoEmail email = emailService.getEmailById(id).orElseThrow(() -> new Exception("Not Found"));
+			  emailService.initValues(user);
+			  emailService.sendAutoEmail(email, userService.getConnectedUser().getEmail());
 			  return ResponseEntity.ok().body("Auto email with id " + id + " successfully sent.");
 		  } catch (Exception e) {
 			  if (e.getMessage() == "Not Found") {
-				  return ResponseEntity.badRequest().body("auto email with id " + id + " doesn't exist.");
+				  return ResponseEntity.badRequest().body("Auto email with id " + id + " doesn't exist.");
 			  } else {
 				  return ResponseEntity.badRequest().body(e.getMessage());
 			  }
 		  }
 	  }
 
-	  public void setService(EmailServiceImpl service) {
-	    this.service = service;
+	  public void setEmailService(EmailServiceImpl emailService) {
+	    this.emailService = emailService;
+	  }
+	  
+	  public void setUserService(UserServiceImpl userService) {
+		this.userService = userService;
 	  }
 }

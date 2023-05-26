@@ -48,5 +48,9 @@ public class UserServiceImpl implements UserService {
 	public void setRepository(UserRepository repository) {
 	    this.repository = repository;
 	}
+	
+	public void setConnectedUser(User user) {
+	    this.connectedUser = user;
+	}
 
 }
