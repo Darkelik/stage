@@ -1,10 +1,9 @@
 package io.troof.bigpi.emailsenderui.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import io.troof.bigpi.emailsenderui.resource.AutoEmail;
 import io.troof.bigpi.emailsenderui.resource.EmailMessage;
+import java.util.List;
+import java.util.Optional;
 
 /** Email sender interface. */
 public interface EmailService {
@@ -16,5 +15,5 @@ public interface EmailService {
   
   public void deleteAutoEmail(String id);
   
-  public void sendAutoEmail (AutoEmail email, String from);
+  public void sendAutoEmail(AutoEmail email, String from);
 }

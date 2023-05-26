@@ -4,15 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import io.troof.bigpi.emailsenderui.repository.EmailRepository;
 import io.troof.bigpi.emailsenderui.repository.UserRepository;
 import io.troof.bigpi.emailsenderui.resource.AutoEmail;
@@ -22,13 +13,25 @@ import io.troof.bigpi.emailsenderui.resource.SmallConnection;
 import io.troof.bigpi.emailsenderui.resource.User;
 import io.troof.bigpi.emailsenderui.service.impl.EmailServiceImpl;
 import io.troof.bigpi.emailsenderui.service.impl.UserServiceImpl;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+
 
 /** Controller class tests. */
 public class EmailControllerTests {
     
   private EmailServiceImpl emailService;
+  @Mock
   private EmailRepository emailRepositoryMock;
   private UserServiceImpl userService;
+  @Mock
   private UserRepository userRepositoryMock;
   private EmailController emailController;
   
@@ -43,7 +46,8 @@ public class EmailControllerTests {
     userService = new UserServiceImpl();
     userService.setRepository(userRepositoryMock);
     
-    Connection co= new Connection("Frédéric Vaz", "fredericvaz2016@gmail.com", "aprjqviwqydnurgc", "smtp.gmail.com", 587, "smtp", "true", "true", "true");
+    Connection co = new Connection("Frédéric Vaz", "fredericvaz2016@gmail.com",
+        "aprjqviwqydnurgc", "smtp.gmail.com", 587, "smtp", "true", "true", "true");
     User user = new User(co);
     user.setId(1);
     userService.register(user);
@@ -58,8 +62,10 @@ public class EmailControllerTests {
   
   @Test
   public void testGetAllEmails() {
-    AutoEmail message1 = new AutoEmail("test1", "trof.test@gmail.com", null, null, "Sub 1", "Mes 1");
-    AutoEmail message2 = new AutoEmail("test2", "trof.test@gmail.com", null, null, "Sub 2", "Mes 2");
+    AutoEmail message1 =
+        new AutoEmail("test1", "trof.test@gmail.com", null, null, "Sub 1", "Mes 1");
+    AutoEmail message2 = 
+        new AutoEmail("test2", "trof.test@gmail.com", null, null, "Sub 2", "Mes 2");
     List<AutoEmail> emails = new ArrayList<>();
     emails.add(message1);
     emails.add(message2);
@@ -109,24 +115,25 @@ public class EmailControllerTests {
     
   @Test
   public void testRegister() {
-	  Connection co = new Connection("test","test@at.com","pass","at.com",85,"smtp","true","true","true");
-	  ResponseEntity<String> response = emailController.register(co);
-	  assertEquals("User " + co.getEmail() + " successfully registered.", response.getBody());
+    Connection co = 
+        new Connection("test", "test@at.com", "pass", "at.com", 85, "smtp", "true", "true", "true");
+    ResponseEntity<String> response = emailController.register(co);
+    assertEquals("User " + co.getEmail() + " successfully registered.", response.getBody());
   }
   
   @Test
   void testConnect() {
-	SmallConnection sco = new SmallConnection("fredericvaz2016@gmail.com","aprjqviwqydnurgc");
+    SmallConnection sco = new SmallConnection("fredericvaz2016@gmail.com", "aprjqviwqydnurgc");
     ResponseEntity<String> response3 = emailController.connect(sco);
-		
-	assertEquals(sco.getEmail() + " is already connected.",response3.getBody());    
+
+    assertEquals(sco.getEmail() + " is already connected.", response3.getBody());    
   }
   
   @Test
   public void testDisconnect() {
-	  ResponseEntity<String> response = emailController.disconnect();
-	  
-	  assertEquals("fredericvaz2016@gmail.com successfully disconnected.", response.getBody());
+    ResponseEntity<String> response = emailController.disconnect();
+    
+    assertEquals("fredericvaz2016@gmail.com successfully disconnected.", response.getBody());
   }
   
   @Test
@@ -139,15 +146,17 @@ public class EmailControllerTests {
     
   @Test
   public void testPrepareAutoEmail() {
-	  AutoEmail email = new AutoEmail("test","troof.test@gmail.com","","","subject","message");
-	  ResponseEntity<String> response = emailController.prepareAutoEmail(email);
-      assertEquals("Auto email with id " + email.getId() + " successfully created.", response.getBody());
+    AutoEmail email = new AutoEmail("test", "troof.test@gmail.com", "", "", "subject", "message");
+    ResponseEntity<String> response = emailController.prepareAutoEmail(email);
+    assertEquals("Auto email with id " + email.getId() + " successfully created.",
+        response.getBody());
   }
   
   @Test
   public void testSendAutoEmail() {    
     @SuppressWarnings("unchecked")
-	ResponseEntity<String> responseEntity = (ResponseEntity<String>) emailController.sendAutoEmail("test");
+    ResponseEntity<String> responseEntity =
+        (ResponseEntity<String>) emailController.sendAutoEmail("test");
     
     assertEquals("Auto email with id test doesn't exist.", responseEntity.getBody());
     

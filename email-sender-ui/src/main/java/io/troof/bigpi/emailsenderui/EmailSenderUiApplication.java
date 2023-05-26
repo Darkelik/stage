@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /** Main class. */
 @SpringBootApplication
-public class EmailSenderUIApplication {
+public class EmailSenderUiApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(EmailSenderUIApplication.class, args);
+    SpringApplication.run(EmailSenderUiApplication.class, args);
   }
 }
