@@ -8,9 +8,11 @@ import io.troof.bigpi.emailsenderui.service.EmailService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 /** Email sender. */
@@ -43,21 +45,31 @@ public class EmailServiceImpl implements EmailService {
   @Override
   public void sendEmail(EmailMessage email, String from) {
     
-    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-    simpleMailMessage.setFrom(from);
-    simpleMailMessage.setTo(email.getTo().split(","));
-    String cc = email.getCc();
-    if (cc != null && cc.length() > 0) {
-      simpleMailMessage.setCc(cc.split(","));
-    }
-    String bcc = email.getBcc();
-    if (bcc != null && bcc.length() > 0) {
-      simpleMailMessage.setBcc(bcc.split(","));
-    }
-    simpleMailMessage.setSubject(email.getSubject());
-    simpleMailMessage.setText(email.getMessage());
+    MimeMessage mimeMessage = mailSender.createMimeMessage();
+    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
     
-    this.mailSender.send(simpleMailMessage);
+    try {
+      helper.setFrom(from);
+      helper.setTo(email.getTo());
+
+      String cc = email.getCc();
+      if (cc != null && cc.length() > 0) {
+        helper.setCc(cc.split(","));
+      }
+    
+      String bcc = email.getBcc();
+      if (bcc != null && bcc.length() > 0) {
+        helper.setBcc(bcc.split(","));
+      }
+      
+      helper.setSubject(email.getSubject());
+      helper.setText(email.getMessage(), true);
+      
+      this.mailSender.send(mimeMessage);
+        
+    } catch (MessagingException e) {
+      e.printStackTrace();
+    }
   }
   
   public EmailRepository getRepository() {
