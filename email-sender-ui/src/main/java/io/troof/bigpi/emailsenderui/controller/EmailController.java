@@ -102,7 +102,7 @@ public class EmailController {
     return ResponseEntity.ok().body(user.getEmail() + " successfully disconnected.");
   }
 
-  /** Sending a regular e-mail. */
+  /** Sending a regular e-mail. E-mails can be written in HTML.*/
   @PostMapping("/send")
   public ResponseEntity<String> sendEmail(@Valid @RequestBody EmailMessage email) {
     User user = userService.getConnectedUser();
@@ -114,7 +114,7 @@ public class EmailController {
     return ResponseEntity.ok().body("Email successfully sent.");
   }
   
-  /** Creating an auto e-mail. */
+  /** Creating an auto e-mail. E-mails can be written in HTML.*/
   @PostMapping("/create")
   public ResponseEntity<String> prepareAutoEmail(@Valid @RequestBody AutoEmail email) {
     emailService.saveAutoEmail(email);
@@ -122,7 +122,7 @@ public class EmailController {
       .body("Auto email with id " + email.getId() + " successfully created.");
   }
 
-  /** Sending a prepared e-mail. */
+  /** Sending a prepared e-mail.*/
   @PostMapping("/autosend")
   public ResponseEntity<?> sendAutoEmail(@Valid @RequestBody String id) {
     User user = userService.getConnectedUser();
